@@ -1,5 +1,5 @@
 from app.database import async_session_maker
-from sqlalchemy import Select
+from sqlalchemy import Select, Insert
 from app.bookings.models import Bookings
 
 class BaseDAO:
@@ -25,4 +25,11 @@ class BaseDAO:
             query = Select(cls.model.__table__.columns).filter_by(**filter_by)
             result = await session.execute(query)
             return result.mappings().all()
+
+    @classmethod
+    async def add(cls, **data):
+        async with async_session_maker() as session:
+            query = Insert(cls.model).values(**data)
+            await session.execute(query)
+            await session.commit()
 
