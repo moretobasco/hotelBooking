@@ -13,4 +13,4 @@ class Hotels(Base):
     rooms_quantity: Mapped[int]
     image_id: Mapped[int]
 
-    rooms: Mapped[list["Rooms"]] = relationship(back_populates="hotel")
+    rooms: Mapped[list["Rooms"]] = relationship(back_populates='hotel')
