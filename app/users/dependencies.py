@@ -7,7 +7,6 @@ from app.exceptions import (
 )
 from jose import jwt, JWTError, ExpiredSignatureError
 from app.config import settings
-from datetime import datetime
 from app.users.dao import UsersDAO
 
 
