@@ -24,6 +24,11 @@ class IncorrectTokenFormatException(BookingException):
     detail = 'Неверный формат токена'
 
 
+class RoomCanNotBeBooked(BookingException):
+    status_code = status.HTTP_409_CONFLICT
+    detail = 'Не осталось свободных номеров'
+
+
 class TokenAbsentException(BookingException):
     status_code = status.HTTP_401_UNAUTHORIZED
     detail = 'Токен отсутствует'
