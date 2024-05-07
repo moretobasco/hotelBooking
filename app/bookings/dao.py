@@ -2,7 +2,7 @@ from sqlalchemy import select, and_, or_, func, insert
 
 from app.bookings.models import Bookings
 from app.database import async_session_maker
-from app.rooms.models import Rooms
+from app.hotels.rooms.models import Rooms
 from app.dao.base import BaseDAO
 
 
@@ -57,5 +57,3 @@ class BookingDAO(BaseDAO):
 
             else:
                 return None
-
-
