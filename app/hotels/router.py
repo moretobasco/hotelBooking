@@ -3,6 +3,6 @@ from fastapi import APIRouter
 router = APIRouter(prefix='/hotels', tags=['/Отели и номера'])
 
 
-@router.get('/{hotel_id}/rooms')
+@router.get('')
 async def get_hotels():
     pass
