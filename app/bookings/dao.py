@@ -4,6 +4,9 @@ from app.bookings.models import Bookings
 from app.database import async_session_maker
 from app.hotels.rooms.models import Rooms
 from app.dao.base import BaseDAO
+from app.users.dependencies import get_current_user
+from fastapi import Depends
+from app.users.models import Users
 
 
 class BookingDAO(BaseDAO):
@@ -57,3 +60,10 @@ class BookingDAO(BaseDAO):
 
             else:
                 return None
+
+    @classmethod
+    async def get_my_bookings(cls, user: Users):
+        async with async_session_maker as session:
+            my_bookings = select(Bookings.__table__.columns).where(Bookings.user == user.id)
+            result = await session.execute(my_bookings)
+            return result.mappings().all()

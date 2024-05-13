@@ -5,7 +5,7 @@ from app.bookings.dao import BookingDAO
 from app.bookings.schemas import SBooking
 from app.users.dependencies import get_current_user
 from app.users.models import Users
-from app.exceptions import RoomCanNotBeBooked
+from app.exceptions import RoomCanNotBeBooked, NoBookings
 
 router = APIRouter(prefix='/bookings', tags=['Бронирования'])
 
@@ -25,4 +25,12 @@ async def add_booking(room_id: int, date_from: date, date_to: date, user: Users 
 @router.delete('/{booking_id}')
 async def delete_booking(booking_id: int, user: Users = Depends(get_current_user)):
     pass
+
+
+@router.get('/mybookings')
+async def get_my_bookings():
+    my_bookings = await BookingDAO.get_my_bookings(user=Depends(get_current_user))
+    if not my_bookings:
+        raise NoBookings
+
 
