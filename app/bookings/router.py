@@ -28,8 +28,8 @@ async def delete_booking(booking_id: int, user: Users = Depends(get_current_user
 
 
 @router.get('/mybookings')
-async def get_my_bookings():
-    my_bookings = await BookingDAO.get_my_bookings(user=Depends(get_current_user))
+async def get_my_bookings(user: Users = Depends(get_current_user)):
+    my_bookings = await BookingDAO.get_my_bookings(user)
     if not my_bookings:
         raise NoBookings
 
