@@ -65,6 +65,5 @@ class BookingDAO(BaseDAO):
     async def get_my_bookings(cls, user: Users):
         async with async_session_maker() as session:
             my_bookings = select(Bookings.__table__.columns).where(Bookings.user_id == user.id)
-            # my_bookings = select(Bookings.__table__.columns).where(Bookings.user_id)
             result = await session.execute(my_bookings)
             return result.mappings().all()
