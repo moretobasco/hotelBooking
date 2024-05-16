@@ -7,6 +7,7 @@ from app.dao.base import BaseDAO
 from app.users.dependencies import get_current_user
 from fastapi import Depends
 from app.users.models import Users
+from app.exceptions import BookingNotFound
 
 
 class BookingDAO(BaseDAO):
@@ -74,9 +75,11 @@ class BookingDAO(BaseDAO):
             booking = select(Bookings.user_id).where(Bookings.id == booking_id)
             booking = await session.execute(booking)
             booking = booking.scalar()
+            if not booking:
+                raise BookingNotFound
             if booking == user.id:
                 delete_booking = delete(Bookings).where(Bookings.id == booking_id)
-                query = await session.execute(delete_booking)
-                await session.commit(query)
+                await session.execute(delete_booking)
+                await session.commit()
             else:
                 return None

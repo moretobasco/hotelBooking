@@ -47,3 +47,8 @@ class TokenExpiredException(BookingException):
 class UserDoesNotExistException(BookingException):
     status_code = status.HTTP_401_UNAUTHORIZED
     detail = 'Пользователь не существует'
+
+
+class BookingNotFound(BookingException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    detail = 'Бронь не найдена'
