@@ -1,4 +1,4 @@
-from sqlalchemy import select, and_, or_, func, insert
+from sqlalchemy import select, and_, or_, func, insert, delete
 
 from app.bookings.models import Bookings
 from app.database import async_session_maker
@@ -68,8 +68,15 @@ class BookingDAO(BaseDAO):
             result = await session.execute(my_bookings)
             return result.mappings().all()
 
-
     @classmethod
-    async def delete_my_booking(cls, user: Users, ):
+    async def delete_my_booking(cls, user: Users, booking_id: int):
         async with async_session_maker() as session:
-
+            booking = select(Bookings.user_id).where(Bookings.id == booking_id)
+            booking = await session.execute(booking)
+            booking = booking.scalar()
+            if booking == user.id:
+                delete_booking = delete(Bookings).where(Bookings.id == booking_id)
+                query = await session.execute(delete_booking)
+                await session.commit(query)
+            else:
+                return None
