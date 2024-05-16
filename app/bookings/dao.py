@@ -67,3 +67,9 @@ class BookingDAO(BaseDAO):
             my_bookings = select(Bookings.__table__.columns).where(Bookings.user_id == user.id)
             result = await session.execute(my_bookings)
             return result.mappings().all()
+
+
+    @classmethod
+    async def delete_my_booking(cls, user: Users, ):
+        async with async_session_maker() as session:
+
