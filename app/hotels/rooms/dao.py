@@ -4,6 +4,7 @@ from app.dao.base import BaseDAO
 from app.hotels.rooms.models import Rooms
 from app.hotels.models import Hotels
 from app.database import async_session_maker
+from sqlalchemy import select
 
 
 class RoomsDAO(BaseDAO):
@@ -12,4 +13,5 @@ class RoomsDAO(BaseDAO):
     @classmethod
     async def get_rooms(cls, hotel_id: int, date_from: date, date_to: date):
         async with async_session_maker() as session:
-            pass
+            query = select(Rooms).where(Rooms.hotel_id == hotel_id)
+            
