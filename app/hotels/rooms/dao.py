@@ -19,4 +19,16 @@ class RoomsDAO(BaseDAO):
                     Bookings. == hotel_id,
 
                 )
+
+                """
+                WITH t1 AS(
+SELECT *
+FROM bookings
+JOIN rooms ON bookings.room_id = rooms.id
+JOIN hotels ON rooms.hotel_id = hotels.id
+WHERE hotel_id = 1 AND date_from <= '2023-06-24' AND date_to >= '2023-06-20')
+SELECT *
+FROM rooms
+JOIN hotels ON rooms.hotel_id = hotels.id
+                """
             
