@@ -12,6 +12,7 @@ router = APIRouter(prefix='/bookings', tags=['Бронирования'])
 
 @router.get('')
 async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBooking]:
+    """ Получение бронирования (без информации номеров) """
     return await BookingDAO.find_all(user_id=user.id)
 
 
@@ -24,11 +25,13 @@ async def add_booking(room_id: int, date_from: date, date_to: date, user: Users 
 
 @router.delete('/{booking_id}')
 async def delete_booking(booking_id: int, user: Users = Depends(get_current_user)):
+    """ Удаление бронирования """
     return await BookingDAO.delete_my_booking(user=user, booking_id=booking_id)
 
 
 @router.get('/mybookings')
 async def get_my_bookings(user: Users = Depends(get_current_user)):
+    """ Получение списка бронирований (с информацией номеров) """
     my_bookings = await BookingDAO.get_my_bookings(user)
     if not my_bookings:
         raise NoBookings
