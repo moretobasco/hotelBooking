@@ -19,6 +19,18 @@ class RoomsDAO(BaseDAO):
             result = await session.execute(query)
             return result.mappings().all()
 
+    @classmethod
+    async def test_get_rooms_2(cls):
+        async with async_session_maker() as session:
+            query = select(
+                Bookings.__table__.columns,
+                Rooms.__table__.columns
+            ).join(
+                Rooms, Bookings.room_id == Rooms.id, isouter=True
+            )
+            result = await session.execute(query)
+            return result.mappings().all()
+
 
 #     @classmethod
 #     async def get_rooms(cls, hotel_id: int, date_from: date, date_to: date):

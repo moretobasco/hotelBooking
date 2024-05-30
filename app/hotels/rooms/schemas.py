@@ -17,3 +17,4 @@ class SRooms(BaseModel):
 class SRoomsTest(BaseModel):
     name: str
     description: str
+
