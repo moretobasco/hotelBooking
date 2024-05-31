@@ -12,24 +12,6 @@ from app.hotels.rooms.schemas import SRoomsTest
 class RoomsDAO(BaseDAO):
     model = Rooms
 
-    @classmethod
-    async def test_get_rooms(cls):
-        async with async_session_maker() as session:
-            query = select(Rooms.__table__.columns)
-            result = await session.execute(query)
-            return result.mappings().all()
-
-    @classmethod
-    async def test_get_rooms_2(cls):
-        async with async_session_maker() as session:
-            query = select(
-                Bookings.__table__.columns,
-                Rooms.__table__.columns
-            ).join(
-                Rooms, Bookings.room_id == Rooms.id, isouter=True
-            )
-            result = await session.execute(query)
-            return result.mappings().all()
 
 
 #     @classmethod

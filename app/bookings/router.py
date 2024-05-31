@@ -2,7 +2,7 @@ from datetime import date
 
 from fastapi import APIRouter, Depends
 from app.bookings.dao import BookingDAO
-from app.bookings.schemas import SBooking
+from app.bookings.schemas import SBooking, SBookingRooms
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 from app.exceptions import RoomCanNotBeBooked, NoBookings
@@ -30,7 +30,7 @@ async def delete_booking(booking_id: int, user: Users = Depends(get_current_user
 
 
 @router.get('/mybookings')
-async def get_my_bookings(user: Users = Depends(get_current_user)):
+async def get_my_bookings(user: Users = Depends(get_current_user)) -> list[SBookingRooms]:
     """ Получение списка бронирований (с информацией номеров) """
     my_bookings = await BookingDAO.get_my_bookings(user)
     if not my_bookings:

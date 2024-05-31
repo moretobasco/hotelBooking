@@ -4,8 +4,6 @@ from app.bookings.models import Bookings
 from app.database import async_session_maker
 from app.hotels.rooms.models import Rooms
 from app.dao.base import BaseDAO
-from app.users.dependencies import get_current_user
-from fastapi import Depends
 from app.users.models import Users
 from app.exceptions import BookingNotFound
 
@@ -65,9 +63,13 @@ class BookingDAO(BaseDAO):
     @classmethod
     async def get_my_bookings(cls, user: Users):
         async with async_session_maker() as session:
-            my_bookings = select(Bookings.__table__.columns).where(Bookings.user_id == user.id).cte('my_bookings')
-            my_bookings_full = select(my_bookings).join()
-            result = await session.execute(my_bookings)
+            query = select(
+                Bookings.__table__.columns,
+                Rooms.__table__.columns
+            ).join(
+                Rooms, Bookings.room_id == Rooms.id, isouter=True
+            ).where(Bookings.user_id == user.id)
+            result = await session.execute(query)
             return result.mappings().all()
 
     @classmethod
