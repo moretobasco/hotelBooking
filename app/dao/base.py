@@ -1,6 +1,5 @@
 from app.database import async_session_maker
 from sqlalchemy import select, Insert
-from app.bookings.models import Bookings
 
 
 class BaseDAO:

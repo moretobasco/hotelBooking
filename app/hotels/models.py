@@ -1,5 +1,5 @@
 from app.database import Base
-from sqlalchemy import Column, Integer, String, JSON
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
 

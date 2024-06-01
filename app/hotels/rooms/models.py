@@ -1,7 +1,7 @@
 from app.database import Base
 from app.hotels.models import Hotels
 from app.bookings.models import Bookings
-from sqlalchemy import Column, Integer, String, JSON, ForeignKey
+from sqlalchemy import JSON, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from typing import Optional
 
