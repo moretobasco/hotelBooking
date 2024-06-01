@@ -32,16 +32,18 @@ class RoomsDAO(BaseDAO):
             JOIN booked_rooms ON rooms.id = booked_rooms.room_id
             WHERE hotel_id = 2
             """
-            query = select(
+            booked_rooms = select(
                 Bookings.room_id,
                 func.count(Bookings.room_id).label('qbookings')).where(
                 and_(
                     Bookings.date_from <= date_to,
                     Bookings.date_to >= date_from
                 )
-            ).group_by(
-                Bookings.room_id
-            )
+            ).group_by(Bookings.room_id).cte('booked_rooms')
+            query = select(
+                Rooms.__table__.columns,
+                (Rooms.quantity - booked_rooms.c.qbookings).label('rooms_left')
+            ).join(booked_rooms, booked_rooms.c.room_id == Rooms.id)
             result = await session.execute(query)
             return result.mappings().all()
 
