@@ -5,7 +5,7 @@ from app.dao.base import BaseDAO
 from app.hotels.rooms.models import Rooms
 from app.hotels.models import Hotels
 from app.database import async_session_maker
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, func
 from app.hotels.rooms.schemas import SRoomsTest
 
 
@@ -14,24 +14,36 @@ class RoomsDAO(BaseDAO):
 
 
 
-#     @classmethod
-#     async def get_rooms(cls, hotel_id: int, date_from: date, date_to: date):
-#         async with async_session_maker() as session:
-#             query = select(Bookings).where(
-#                 and_(
-#                     Bookings. == hotel_id,
-#
-#                 )
-#
-#                 """
-#                 WITH t1 AS(
-# SELECT *
-# FROM bookings
-# JOIN rooms ON bookings.room_id = rooms.id
-# JOIN hotels ON rooms.hotel_id = hotels.id
-# WHERE hotel_id = 1 AND date_from <= '2023-06-24' AND date_to >= '2023-06-20')
-# SELECT *
-# FROM rooms
-# JOIN hotels ON rooms.hotel_id = hotels.id
-#                 """
+    @classmethod
+    async def get_rooms(cls, date_from: date, date_to: date):
+        async with async_session_maker() as session:
+            """
+            WITH booked_rooms AS (
+                SELECT room_id, COUNT(room_id) as qbookings
+                FROM bookings
+                WHERE date_from <= '2024-06-04' AND date_to >= '2024-05-30'
+                GROUP BY room_id
+                )
+            SELECT
+                *,
+                rooms.quantity - booked_rooms.qbookings rooms_left,
+                (CAST('2024-06-04' AS date) - cast('2024-05-30' as date)) * price as total_cost
+            FROM rooms
+            JOIN booked_rooms ON rooms.id = booked_rooms.room_id
+            WHERE hotel_id = 2
+            """
+            query = select(
+                Bookings.room_id,
+                func.count(Bookings.room_id).label('qbookings')).where(
+                and_(
+                    Bookings.date_from <= date_to,
+                    Bookings.date_to >= date_from
+                )
+            ).group_by(
+                Bookings.room_id
+            )
+            result = await session.execute(query)
+            return result.mappings().all()
+
+
             
