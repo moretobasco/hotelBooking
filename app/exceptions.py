@@ -52,3 +52,8 @@ class UserDoesNotExistException(BookingException):
 class BookingNotFound(BookingException):
     status_code = status.HTTP_401_UNAUTHORIZED
     detail = 'Бронь не найдена'
+
+
+class NotYourBooking(BookingException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    detail = 'Несоответствие пользователя и брони'

@@ -5,7 +5,7 @@ from app.database import async_session_maker
 from app.hotels.rooms.models import Rooms
 from app.dao.base import BaseDAO
 from app.users.models import Users
-from app.exceptions import BookingNotFound
+from app.exceptions import BookingNotFound, NotYourBooking
 
 
 class BookingDAO(BaseDAO):
@@ -17,16 +17,8 @@ class BookingDAO(BaseDAO):
             booked_rooms = select(Bookings).where(
                 and_(
                     Bookings.room_id == room_id,
-                    or_(
-                        and_(
-                            Bookings.date_from >= date_from,
-                            Bookings.date_from <= date_to
-                        ),
-                        and_(
-                            Bookings.date_from <= date_from,
-                            Bookings.date_to > date_from
-                        )
-                    )
+                    Bookings.date_from <= date_to,
+                    Bookings.date_to >= date_from
                 )
             ).cte('booked_rooms')
 
@@ -85,4 +77,4 @@ class BookingDAO(BaseDAO):
                 await session.execute(delete_booking)
                 await session.commit()
             else:
-                return None
+                return NotYourBooking
