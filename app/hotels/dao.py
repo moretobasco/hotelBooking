@@ -13,7 +13,7 @@ class HotelsDAO(BaseDAO):
     model = Hotels
 
     @classmethod
-    async def get_free_hotels(cls, location: str, date_from: date, date_to: date):
+    async def get_hotels_by_location_and_time(cls, location: str, date_from: date, date_to: date):
         async with async_session_maker() as session:
             '''
             WITH booked_rooms AS (
