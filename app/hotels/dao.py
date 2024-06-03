@@ -32,6 +32,26 @@ class HotelsDAO(BaseDAO):
             LEFT JOIN hotels ON rooms.hotel_id = hotels.id
             WHERE rooms.quantity - COALESCE(booked_rooms.qbookings, 0) > 0 AND hotels.location LIKE '%Алтай%'
             ORDER BY hotels.id
+            
+            
+            
+            WITH t1 AS (
+	            WITH booked_rooms AS (
+                SELECT room_id, COUNT(room_id) AS qbookings
+                FROM bookings
+                WHERE date_from <= '2024-06-04' AND date_to >= '2024-05-30'
+                GROUP BY room_id
+	            )
+            SELECT rooms.hotel_id, SUM(rooms.quantity - COALESCE(booked_rooms.qbookings, 0)) rooms_left
+            FROM rooms
+            LEFT JOIN booked_rooms on booked_rooms.room_id = rooms.id
+            GROUP BY rooms.hotel_id
+                )
+SELECT *
+FROM hotels
+JOIN t1 on hotels.id = t1.hotel_id
+WHERE t1.rooms_left > 0 AND hotels.location LIKE '%Алтай%'
+ORDER BY hotels.id
             '''
 
         booked_rooms = select(
