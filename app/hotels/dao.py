@@ -66,27 +66,27 @@ class HotelsDAO(BaseDAO):
 
         t1 = select(
             Rooms.hotel_id,
-            func.sum(Rooms.quantity) - func.coalesce(booked_rooms.c.qbookings, 0)
+            func.sum(Rooms.quantity - func.coalesce(booked_rooms.c.qbookings, 0)).label('rooms_left')
         ).join(
             booked_rooms, Rooms.id == booked_rooms.c.room_id, isouter=True
         ).group_by(
             Rooms.hotel_id
+        ).order_by(
+            Rooms.hotel_id
         ).cte('t1')
 
-        query = select(t1)
-
-        # query = select(
-        #     Hotels.__table__.columns
-        # ).join(
-        #     t1, Hotels.id == t1.c.hotel_id
-        # ).where(
-        #     and_(
-        #         t1.c.rooms_left > 0,
-        #         Hotels.location.like(f'%{location}%')
-        #     )
-        # ).order_by(
-        #     Hotels.id
-        # )
+        query = select(
+            Hotels.__table__.columns
+        ).join(
+            t1, Hotels.id == t1.c.hotel_id
+        ).where(
+            and_(
+                t1.c.rooms_left > 0,
+                Hotels.location.like(f'%{location}%')
+            )
+        ).order_by(
+            Hotels.id
+        )
 
 
         # booked_rooms = select(
