@@ -14,6 +14,6 @@ async def get_hotels(hotel_id: int) -> list[SHotels]:
 
 
 @router.get('/{location}')
-async def get_hotels_by_location_and_time(location: str, date_from: date, date_to: date) -> list[SHotelsInLoc]:
+async def get_hotels_by_location_and_time(location: str, date_from: date, date_to: date):#-> list[SHotelsInLoc]:
     """ Получение списка отелей """
     return await HotelsDAO.get_hotels_by_location_and_time(location, date_from, date_to)
