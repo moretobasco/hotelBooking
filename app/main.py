@@ -53,6 +53,8 @@ async def lifespan(app: FastAPI):
     yield
 
 
+
+
 class HotelsSearchArgs:
     def __init__(
             self,
