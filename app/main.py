@@ -55,28 +55,28 @@ async def lifespan(app: FastAPI):
 
 
 
-class HotelsSearchArgs:
-    def __init__(
-            self,
-            location: str,
-            date_from: date,
-            date_to: date,
-            has_parking: Annotated[Union[bool], Query()] = None,
-            has_spa: Union[bool] = None,
-            stars: int = Query(ge=1, le=5, default=None),
-    ):
-        self.location = location,
-        self.date_from = date_from,
-        self.date_to = date_to,
-        self.has_parking = has_parking,
-        self.has_spa = has_spa
-        self.stars = stars
-
-
-class SHotel(BaseModel):
-    address: str
-    name: str
-    stars: int
+# class HotelsSearchArgs:
+#     def __init__(
+#             self,
+#             location: str,
+#             date_from: date,
+#             date_to: date,
+#             has_parking: Annotated[Union[bool], Query()] = None,
+#             has_spa: Union[bool] = None,
+#             stars: int = Query(ge=1, le=5, default=None),
+#     ):
+#         self.location = location,
+#         self.date_from = date_from,
+#         self.date_to = date_to,
+#         self.has_parking = has_parking,
+#         self.has_spa = has_spa
+#         self.stars = stars
+#
+#
+# class SHotel(BaseModel):
+#     address: str
+#     name: str
+#     stars: int
 
 
 # @app.get('/hotels', response_model=list[SHotel])
