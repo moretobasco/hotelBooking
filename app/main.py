@@ -18,6 +18,19 @@ from contextlib import asynccontextmanager
 
 from redis import asyncio as aioredis
 
+
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     redis = aioredis.from_url("redis://localhost:6379")
+#     FastAPICache.init(RedisBackend(redis), prefix="cache")
+#     yield
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    redis = aioredis.from_url("redis://localhost:6379", encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="cache")
+    yield
+
 app = FastAPI()
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
@@ -44,13 +57,6 @@ app.add_middleware(
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
                    "Access-Control-Allow-Origin", "Authorization"],
 )
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    redis = aioredis.from_url("redis://localhost")
-    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
-    yield
 
 
 
@@ -92,5 +98,3 @@ async def lifespan(app: FastAPI):
 #         }
 #     ]
 #     return hotels
-
-
