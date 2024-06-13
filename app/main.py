@@ -15,15 +15,10 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
 from contextlib import asynccontextmanager
+import logging
 
 from redis import asyncio as aioredis
 
-
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     redis = aioredis.from_url("redis://localhost:6379")
-#     FastAPICache.init(RedisBackend(redis), prefix="cache")
-#     yield
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,7 +26,8 @@ async def lifespan(app: FastAPI):
     FastAPICache.init(RedisBackend(redis), prefix="cache")
     yield
 
-app = FastAPI()
+
+app = FastAPI(lifespan=lifespan)
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
 
@@ -57,10 +53,6 @@ app.add_middleware(
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
                    "Access-Control-Allow-Origin", "Authorization"],
 )
-
-
-
-
 
 # class HotelsSearchArgs:
 #     def __init__(
