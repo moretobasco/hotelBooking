@@ -6,6 +6,8 @@ from app.bookings.schemas import SBooking, SBookingRooms
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 from app.exceptions import RoomCanNotBeBooked, NoBookings
+from pydantic import parse_obj_as
+from app.tasks.tasks import send_booking_confirmation_email
 
 router = APIRouter(prefix='/bookings', tags=['Бронирования'])
 
@@ -21,6 +23,9 @@ async def add_booking(room_id: int, date_from: date, date_to: date, user: Users 
     booking = await BookingDAO.add(user.id, room_id, date_from, date_to)
     if not booking:
         raise RoomCanNotBeBooked
+    booking_dict = parse_obj_as(SBooking, booking).dict()
+    send_booking_confirmation_email.delay(booking_dict, user.email)
+    return booking_dict
 
 
 @router.delete('/{booking_id}')
