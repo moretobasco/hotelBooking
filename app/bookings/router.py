@@ -8,6 +8,7 @@ from app.users.models import Users
 from app.exceptions import RoomCanNotBeBooked, NoBookings
 from pydantic import parse_obj_as
 from app.tasks.tasks import send_booking_confirmation_email
+from fastapi import BackgroundTasks
 
 router = APIRouter(prefix='/bookings', tags=['Бронирования'])
 
@@ -19,12 +20,20 @@ async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBooking
 
 
 @router.post('')
-async def add_booking(room_id: int, date_from: date, date_to: date, user: Users = Depends(get_current_user)):
+async def add_booking(
+        background_tasks: BackgroundTasks,
+        room_id: int,
+        date_from: date,
+        date_to: date,
+        user: Users = Depends(get_current_user)):
     booking = await BookingDAO.add(user.id, room_id, date_from, date_to)
     if not booking:
         raise RoomCanNotBeBooked
     booking_dict = parse_obj_as(SBooking, booking).dict()
-    send_booking_confirmation_email.delay(booking_dict, user.email)
+    # вариант с celery
+    # send_booking_confirmation_email.delay(booking_dict, user.email)
+    # вариант встроенный Background tasks
+    background_tasks.add_task(send_booking_confirmation_email, booking_dict, user.email)
     return booking_dict
 
 
