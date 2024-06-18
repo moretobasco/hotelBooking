@@ -18,7 +18,7 @@ def process_pic(
     im_resized_1000_500.save(f'app/static/images/resized_1000_500_{im_path.name}')
     im_resized_200_100.save(f'app/static/images/resized_200_100_{im_path.name}')
 
-
+# ТАСКА ВЫКЛЮЧЕНА ИЗ СЕЛЕРИ
 # @app_celery.task
 def send_booking_confirmation_email(
         booking: dict,
