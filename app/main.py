@@ -17,6 +17,7 @@ from fastapi_cache.decorator import cache
 from contextlib import asynccontextmanager
 import logging
 from app.config import settings
+from sqladmin import Admin, ModelView
 
 from redis import asyncio as aioredis
 
@@ -29,6 +30,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+admin = Admin(app, engine)
+
+
+class UserAdmin(ModelView, model=User):
+    column_list = [User.id, User.name]
+
+
+admin.add_view(UserAdmin)
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
 
