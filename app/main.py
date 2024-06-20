@@ -34,11 +34,11 @@ app = FastAPI(lifespan=lifespan)
 admin = Admin(app, engine)
 
 
-class UserAdmin(ModelView, model=User):
-    column_list = [User.id, User.name]
+class UsersAdmin(ModelView, model=Users):
+    column_list = [Users.id, Users.email]
 
 
-admin.add_view(UserAdmin)
+admin.add_view(UsersAdmin)
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
 
