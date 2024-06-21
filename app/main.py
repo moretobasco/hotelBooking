@@ -38,6 +38,7 @@ class UsersAdmin(ModelView, model=Users):
     column_list = [Users.id, Users.email]
 
 
+
 admin.add_view(UsersAdmin)
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
