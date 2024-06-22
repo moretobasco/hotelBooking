@@ -39,6 +39,7 @@ class UsersAdmin(ModelView, model=Users):
 
 
 
+
 admin.add_view(UsersAdmin)
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
