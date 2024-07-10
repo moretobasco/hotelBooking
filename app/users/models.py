@@ -12,3 +12,6 @@ class Users(Base):
     hashed_password: Mapped[str]
 
     bookings: Mapped[list["Bookings"]] = relationship(back_populates='user')
+
+    def __str__(self):
+        return f'User {self.email}'

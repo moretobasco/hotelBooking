@@ -20,6 +20,7 @@ import logging
 from app.config import settings
 from sqladmin import Admin, ModelView
 from app.database import engine
+from app.admin.views import UsersAdmin, BookingsAdmin
 
 from redis import asyncio as aioredis
 
@@ -36,17 +37,8 @@ app = FastAPI(lifespan=lifespan)
 
 admin = Admin(app, engine)
 
-
-class UsersAdmin(ModelView, model=Users):
-    column_list = [Users.id, Users.email]
-    column_details_exclude_list = [Users.hashed_password]
-    can_delete = False
-    name = 'Пользователь'
-    name_plural = 'Пользователи'
-    icon = 'fa-solid fa-user'
-
-
 admin.add_view(UsersAdmin)
+admin.add_view(BookingsAdmin)
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
 
