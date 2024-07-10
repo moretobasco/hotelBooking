@@ -6,6 +6,7 @@ from typing import Union
 from datetime import date
 from pydantic import BaseModel
 from app.bookings.router import router as router_bookings
+from app.users.models import Users
 from app.users.router import router as router_users
 from app.hotels.router import router as router_hotels
 from app.hotels.rooms.router import router as router_rooms
@@ -18,13 +19,15 @@ from contextlib import asynccontextmanager
 import logging
 from app.config import settings
 from sqladmin import Admin, ModelView
+from app.database import engine
 
 from redis import asyncio as aioredis
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", encoding="utf8", decode_responses=True)
+    redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", encoding="utf8",
+                              decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="cache")
     yield
 
@@ -36,11 +39,6 @@ admin = Admin(app, engine)
 
 class UsersAdmin(ModelView, model=Users):
     column_list = [Users.id, Users.email]
-
-
-
-
-
 
 
 admin.add_view(UsersAdmin)
