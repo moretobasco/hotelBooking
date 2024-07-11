@@ -40,6 +40,7 @@ admin = Admin(app, engine)
 admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)
 
+
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
 
 app.include_router(router_users)
