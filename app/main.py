@@ -20,7 +20,7 @@ import logging
 from app.config import settings
 from sqladmin import Admin, ModelView
 from app.database import engine
-from app.admin.views import UsersAdmin, BookingsAdmin
+from app.admin.views import UsersAdmin, BookingsAdmin, HotelsAdmin, RoomsAdmin
 
 from redis import asyncio as aioredis
 
@@ -39,6 +39,8 @@ admin = Admin(app, engine)
 
 admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)
+admin.add_view(HotelsAdmin)
+admin.add_view(RoomsAdmin)
 
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')

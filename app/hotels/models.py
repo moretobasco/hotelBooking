@@ -14,3 +14,6 @@ class Hotels(Base):
     image_id: Mapped[int]
 
     rooms: Mapped[list["Rooms"]] = relationship(back_populates='hotel')
+
+    def __str__(self):
+        return f'Hotel {self.name}'
