@@ -33,7 +33,6 @@ async def lifespan(app: FastAPI):
     yield
 
 
-
 app = FastAPI(lifespan=lifespan)
 
 admin = Admin(app, engine)
@@ -42,7 +41,6 @@ admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)
 admin.add_view(HotelsAdmin)
 admin.add_view(RoomsAdmin)
-
 
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
 
