@@ -9,7 +9,6 @@ from app.bookings.models import Bookings
 from app.database import async_session_maker
 from fastapi.encoders import jsonable_encoder
 
-
 from app.hotels.router import router
 
 
@@ -17,7 +16,6 @@ from app.hotels.router import router
 async def get_rooms(hotel_id: int, date_from: date, date_to: date) -> list[SRoomsList]:
     """ Получение списка комнат """
     return await RoomsDAO.get_rooms(hotel_id, date_from, date_to)
-
 
 
 @router.get("/example/no_orm")
@@ -29,8 +27,8 @@ async def get_noorm():
                 Hotels.__table__.columns,
                 Bookings.__table__.columns
             )
-            .join(Hotels, Rooms.hotel_id==Hotels.id)
-            .join(Bookings, Bookings.room_id==Rooms.id)
+            .join(Hotels, Rooms.hotel_id == Hotels.id)
+            .join(Bookings, Bookings.room_id == Rooms.id)
         )
         res = await session.execute(query)
         res = res.mappings().all()
