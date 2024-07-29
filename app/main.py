@@ -5,6 +5,8 @@ from typing_extensions import Annotated
 from typing import Union
 from datetime import date
 from pydantic import BaseModel
+
+from app.admin.auth import authentication_backend
 from app.bookings.router import router as router_bookings
 from app.users.models import Users
 from app.users.router import router as router_users
@@ -35,7 +37,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-admin = Admin(app, engine)
+admin = Admin(app, engine, authentication_backend=authentication_backend)
 
 admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)
