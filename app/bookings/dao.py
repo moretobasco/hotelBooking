@@ -65,14 +65,14 @@ class BookingDAO(BaseDAO):
             return result.mappings().all()
 
     @classmethod
-    async def delete_my_booking(cls, user: Users, booking_id: int):
+    async def delete_my_booking(cls, user_id: int, booking_id: int):
         async with async_session_maker() as session:
             booking = select(Bookings.user_id).where(Bookings.id == booking_id)
             booking = await session.execute(booking)
             booking = booking.scalar()
             if not booking:
                 raise BookingNotFound
-            if booking == user.id:
+            if booking == user_id:
                 delete_booking = delete(Bookings).where(Bookings.id == booking_id)
                 await session.execute(delete_booking)
                 await session.commit()
