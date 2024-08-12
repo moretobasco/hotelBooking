@@ -1,4 +1,4 @@
-from sqlalchemy import select, and_, or_, func, insert, delete
+from sqlalchemy import select, and_, func, insert, delete
 
 from app.bookings.models import Bookings
 from app.database import async_session_maker
