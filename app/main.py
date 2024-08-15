@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 import time
+import sentry_sdk
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -32,6 +33,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+sentry_sdk.init(
+    dsn=settings.DSN,
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
+
 admin = Admin(app, engine, authentication_backend=authentication_backend)
 
 admin.add_view(UsersAdmin)
@@ -63,7 +70,6 @@ app.add_middleware(
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
                    "Access-Control-Allow-Origin", "Authorization"],
 )
-
 
 
 @app.middleware("http")
